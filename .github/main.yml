@@ -1,0 +1,77 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    environment: cumul
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.S3_PUSH_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.S3_PUSH_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.S3_PUSH_REGION }}
+
+      # Runs a single command using the runners shell
+      - name: Zip FE Files
+        run: |
+          rm -rf *.zip
+          cd auth0-fe/
+          cd vue-auth0-hello-world
+          zip -r ../../vue-auth0-hello-world.zip *
+          cd ../react-auth0-hello-world
+          zip -r ../../react-auth0-hello-world.zip *
+          cd ../html-auth0-hello-world
+          zip -r ../../html-auth0-hello-world.zip *
+          cd ../angular-auth0-hello-world
+          zip -r ../../angular-auth0-hello-world.zip *
+
+      - name: Zip BE Files
+        run: |
+          cd auth0-be/
+          cd dotnet-auth0-hello-world
+          zip -r ../../dotnet-auth0-hello-world.zip *
+          cd ../python-auth0-hello-world
+          zip -r ../../python-auth0-hello-world.zip *
+          cd ../java-auth0-hello-world
+          zip -r ../../java-auth0-hello-world.zip *
+          cd ../nodejs-auth0-hello-world
+          zip -r ../../nodejs-auth0-hello-world.zip *
+          cd ../php-auth0-hello-world
+          zip -r ../../php-auth0-hello-world.zip *
+
+      # Runs a set of commands using the runners shell
+      - name: Upload an invalidate
+        run: |
+          aws s3 cp vue-auth0-hello-world.zip s3://static.cumul.io/sample-client/vue-auth0-hello-world.zip
+          aws s3 cp angular-auth0-hello-world.zip s3://static.cumul.io/sample-client/angular-auth0-hello-world.zip
+          aws s3 cp html-auth0-hello-world.zip s3://static.cumul.io/sample-client/html-auth0-hello-world.zip          
+          aws s3 cp react-auth0-hello-world.zip s3://static.cumul.io/sample-client/react-auth0-hello-world.zip
+          aws s3 cp dotnet-auth0-hello-world.zip s3://static.cumul.io/sample-server/dotnet-auth0-hello-world.zip          
+          aws s3 cp java-auth0-hello-world.zip s3://static.cumul.io/sample-server/java-auth0-hello-world.zip
+          aws s3 cp python-auth0-hello-world.zip s3://static.cumul.io/sample-server/python-auth0-hello-world.zip
+          aws s3 cp php-auth0-hello-world.zip s3://static.cumul.io/sample-server/php-auth0-hello-world.zip
+          aws s3 cp nodejs-auth0-hello-world.zip s3://static.cumul.io/sample-server/nodejs-auth0-hello-world.zip
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/sample-client/*"
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/sample-server/*"

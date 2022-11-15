@@ -1,0 +1,30 @@
+.container-whole {
+  margin-top: 6rem;
+}
+body {
+  font-family: 'Gudea', sans-serif;
+  /* background: #232323; */
+}
+
+.loader {
+  position: absolute;
+  left: 48%;
+  top: 30%;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Bangers', cursive;
+}
+
+.links-container {
+  margin-top: 6rem;
+}
+
+.h1-bg {
+  font-family: 'Bangers', cursive;
+  font-size: 4.5rem;
+  letter-spacing: 4px;
+  color: white;
+  background: rgb(71,34,195);
+  background: linear-gradient(73deg, rgba(71,34,195,1) 0%, rgba(119,33,159,1) 100%);
+}
