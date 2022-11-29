@@ -4,8 +4,8 @@ import { useEffect, useState, useRef } from 'react';
 import { CumulioDashboardComponent, CumulioDashboard } from "@cumul.io/react-cumulio-dashboard";
 import './portal.css';
 
-const appServer = 'https://app.cumul.io';
-const apiHost = 'https://api.cumul.io';
+const appServer = 'APP_SERVER_HERE';
+const apiHost = 'API_HOST_HERE';
 
 function Portal() {
   const [dashboardId, setDashboardId] = useState('');
@@ -29,7 +29,7 @@ function Portal() {
                 setDashboardId(dashboards[0].id);
               }
             });
-          }, 1);
+          }, 100);
         }, 2000);
 
       });

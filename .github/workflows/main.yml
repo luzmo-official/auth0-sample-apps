@@ -39,27 +39,27 @@ jobs:
           rm -rf *.zip
           cd auth0-fe/
           cd vue-auth0-hello-world
-          zip -r ../../vue-auth0-hello-world.zip *
+          zip -r ../../vue-auth0-hello-world.zip * .*
           cd ../react-auth0-hello-world
-          zip -r ../../react-auth0-hello-world.zip *
+          zip -r ../../react-auth0-hello-world.zip * .*
           cd ../html-auth0-hello-world
-          zip -r ../../html-auth0-hello-world.zip *
+          zip -r ../../html-auth0-hello-world.zip * .*
           cd ../angular-auth0-hello-world
-          zip -r ../../angular-auth0-hello-world.zip *
+          zip -r ../../angular-auth0-hello-world.zip * .*
 
       - name: Zip BE Files
         run: |
           cd auth0-be/
           cd dotnet-auth0-hello-world
-          zip -r ../../dotnet-auth0-hello-world.zip *
+          zip -r ../../dotnet-auth0-hello-world.zip * .*
           cd ../python-auth0-hello-world
-          zip -r ../../python-auth0-hello-world.zip *
+          zip -r ../../python-auth0-hello-world.zip * .*
           cd ../java-auth0-hello-world
-          zip -r ../../java-auth0-hello-world.zip *
+          zip -r ../../java-auth0-hello-world.zip * .*
           cd ../nodejs-auth0-hello-world
-          zip -r ../../nodejs-auth0-hello-world.zip *
+          zip -r ../../nodejs-auth0-hello-world.zip * .*
           cd ../php-auth0-hello-world
-          zip -r ../../php-auth0-hello-world.zip *
+          zip -r ../../php-auth0-hello-world.zip * .*
 
       # Runs a set of commands using the runners shell
       - name: Upload an invalidate
