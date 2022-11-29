@@ -39,27 +39,27 @@ jobs:
           rm -rf *.zip
           cd auth0-fe/
           cd vue-auth0-hello-world
-          zip -r ../../vue-auth0-hello-world.zip * .*
+          zip -r ../../vue-auth0-hello-world.zip * .gitignore
           cd ../react-auth0-hello-world
-          zip -r ../../react-auth0-hello-world.zip * .*
+          zip -r ../../react-auth0-hello-world.zip * .gitignore
           cd ../html-auth0-hello-world
-          zip -r ../../html-auth0-hello-world.zip * .*
+          zip -r ../../html-auth0-hello-world.zip * .gitignore
           cd ../angular-auth0-hello-world
-          zip -r ../../angular-auth0-hello-world.zip * .*
+          zip -r ../../angular-auth0-hello-world.zip * .gitignore
 
       - name: Zip BE Files
         run: |
           cd auth0-be/
           cd dotnet-auth0-hello-world
-          zip -r ../../dotnet-auth0-hello-world.zip * .*
+          zip -r ../../dotnet-auth0-hello-world.zip * .env.example .gitignore
           cd ../python-auth0-hello-world
-          zip -r ../../python-auth0-hello-world.zip * .*
+          zip -r ../../python-auth0-hello-world.zip * .env.example .gitignore
           cd ../java-auth0-hello-world
-          zip -r ../../java-auth0-hello-world.zip * .*
+          zip -r ../../java-auth0-hello-world.zip * .env.example .gitignore
           cd ../nodejs-auth0-hello-world
-          zip -r ../../nodejs-auth0-hello-world.zip * .*
+          zip -r ../../nodejs-auth0-hello-world.zip * .env.example .gitignore
           cd ../php-auth0-hello-world
-          zip -r ../../php-auth0-hello-world.zip * .*
+          zip -r ../../php-auth0-hello-world.zip * .env.example .gitignore
 
       # Runs a set of commands using the runners shell
       - name: Upload an invalidate
