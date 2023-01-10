@@ -13,6 +13,11 @@ import fi.iki.elonen.NanoHTTPD;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.cumul.sdk.Cumulio;
 import org.json.JSONObject;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.common.collect.ImmutableMap;
 
 public class App extends NanoHTTPD {
@@ -51,19 +56,20 @@ public class App extends NanoHTTPD {
                 response.addHeader("Content-Type", "application/json");
                 return response;
             }
-            Map<String, String> queryParams = splitQuery(session.getQueryParameterString());
-
+            System.out.println("HandlePOST");
+            Map<String, String> headers = session.getHeaders();
+            Map<String, Claim> userObject = getUserOjbect(headers.get("authorization"));
             // Setup connection
             Cumulio client = new Cumulio(dotenv.get("CUMUL_KEY"), dotenv.get("CUMUL_TOKEN"), dotenv.get("API_URL"));
-            ImmutableMap metadata = ImmutableMap.builder().put("brand", queryParams.get("brand")).build();
+            ImmutableMap metadata = ImmutableMap.builder().put("brand", userObject.get("https://cumulio/brand").asString()).build();
             // On page requests of pages containing embedded dashboards, request an "authorization"
             JSONObject authorization = client.create("authorization", ImmutableMap.builder()
                 .put("type", "sso")
                 .put("expiry", "24 hours")
                 .put("inactivity_interval", "10 minutes")
-                .put("username", queryParams.get("username") != null ? queryParams.get("username") : dotenv.get("USER_USERNAME"))
-                .put("name", queryParams.get("name") != null ? queryParams.get("name") : dotenv.get("USER_NAME"))
-                .put("email", queryParams.get("email") != null ? queryParams.get("email") : dotenv.get("USER_EMAIL"))
+                .put("username", userObject.get("name").asString() != null ? userObject.get("name").asString() : dotenv.get("USER_USERNAME"))
+                .put("name", userObject.get("name").asString() != null ? userObject.get("name").asString() : dotenv.get("USER_NAME"))
+                .put("email", userObject.get("email").asString() != null ? userObject.get("email").asString() : dotenv.get("USER_EMAIL"))
                 .put("suborganization", dotenv.get("USER_SUBORGANIZATION"))
                 .put("integration_id", dotenv.get("INTEGRATION_ID"))
                 .put("role", "viewer")
@@ -94,7 +100,14 @@ public class App extends NanoHTTPD {
 
     }
 
-    public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
+    private static Map<String, Claim> getUserOjbect(String authorizationToken) {
+        String authToken = authorizationToken.split(" ")[1];
+        DecodedJWT authUser = JWT.decode(authToken);
+        System.out.println("AuthUser" + authUser.getClaims().get("nickname"));
+        return authUser.getClaims();
+    } 
+
+    private static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
         Map<String, String> query_pairs = new LinkedHashMap<String, String>();
         String[] pairs = query.split("&");
         for (String pair : pairs) {

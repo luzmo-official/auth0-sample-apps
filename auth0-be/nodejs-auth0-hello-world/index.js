@@ -31,17 +31,16 @@ app.use(CORS());
 const port = 4001;
 
 app.get('/', (req, res) => {
-  const brand = req.query.brand;
-  // or you can get the token parse it and use it.
-  // const decodedToken = jwtDecode(req.query.token);
-  // const brand = decodedToken['https://cumulio/brand']
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwtDecode(token);
+  const brand = decodedToken['https://cumulio/brand']
   data.metadata = {
     brand: brand
   };
-  data.username = req.query.username || data.username;
-  data.name = req.query.name || data.name;
-  data.email = req.query.email || data.email;
-  data.suborganization = req.query.suborganization || data.suborganization;
+  data.username = decodedToken['username'] || data.username;
+  data.name = decodedToken['name'] || data.name;
+  data.email = decodedToken['email'] || data.email;
+  data.suborganization = decodedToken['suborganization'] || data.suborganization;
   cumulClient.create('authorization', data).then(function (response) {
     const resp = {
       status: 'success',

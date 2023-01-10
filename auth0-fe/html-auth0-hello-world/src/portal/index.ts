@@ -27,10 +27,13 @@ const render = (root: HTMLElement, auth?: {
   >
     <span class="visually-hidden">Loading...</span>
   </div>`;
-
-  window.fetch(`http://localhost:4001?brand=${user?.['https://cumulio/brand']}&username=${user?.['nickname']}&email=${user?.email}&name=${user?.name}`)
-  .then(response => response.json())
-  .then(data => {
+  window.fetch(`http://localhost:4001`, {
+    headers: {
+      'Authorization': 'Bearer ' + user.idToken
+    }
+  })
+  .then((response: any) => response.json())
+  .then((data: any) => {
     setTimeout(() => {
       const dashboardInstance = document.getElementById('dashboardInstance');
       (dashboardInstance as CumulioDashboard).getAccessibleDashboards().then(dashboards => {
@@ -50,21 +53,23 @@ const render = (root: HTMLElement, auth?: {
           </span>
         </div>
       </nav>
-      <cumulio-dashboard
-        id="dashboardInstance"
-        authKey="${data.key}"
-        authToken="${data.token}"
-        dashboardId="${dashboardId}"
-        appServer="${appServer}"
-        apiHost="${apiHost}"
-        mainColor="pink"
-        accentColor="black"
-        loaderSpinnerColor="rgb(0, 81, 126)"
-        loaderSpinnerBackground="rgb(236 248 255)"
-        itemsRendered={(e) => console.log("itemsRendered", e)}
-        exported={(e) => console.log("exported", e)}
-        load={(e) => console.log("load", e)}>
-      </cumulio-dashboard>
+      <div class="container">
+        <cumulio-dashboard
+          id="dashboardInstance"
+          authKey="${data.key}"
+          authToken="${data.token}"
+          dashboardId="${dashboardId}"
+          appServer="${appServer}"
+          apiHost="${apiHost}"
+          mainColor="pink"
+          accentColor="black"
+          loaderSpinnerColor="rgb(0, 81, 126)"
+          loaderSpinnerBackground="rgb(236 248 255)"
+          itemsRendered={(e) => console.log("itemsRendered", e)}
+          exported={(e) => console.log("exported", e)}
+          load={(e) => console.log("load", e)}>
+        </cumulio-dashboard>
+      </div>
     </div>
     `;
   });

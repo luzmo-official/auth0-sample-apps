@@ -4,8 +4,14 @@ import router from "../router";
 import { ref, watch } from "vue";
 export default {
   setup() {
-    const { loginWithRedirect, logout, isAuthenticated, isLoading, user } =
-      useAuth0();
+    const {
+      idTokenClaims,
+      loginWithRedirect,
+      logout,
+      isAuthenticated,
+      isLoading,
+      user,
+    } = useAuth0();
     const authKey = ref("");
     const authToken = ref("");
     const dashboardId = ref("DASHBOARD_ID_HERE");
@@ -15,13 +21,14 @@ export default {
       router.push("/portal");
     }
 
-    watch(user, () => {
-      console.log(user.value);
-      if (user.value) {
+    watch(idTokenClaims, async () => {
+      if (idTokenClaims.value) {
         window
-          .fetch(
-            `http://localhost:4001?brand=${user.value?.["https://cumulio/brand"]}&username=${user.value?.["nickname"]}&email=${user.value?.email}&name=${user.value?.name}`
-          )
+          .fetch(`http://localhost:4001`, {
+            headers: {
+              Authorization: "Bearer " + idTokenClaims.value.__raw,
+            },
+          })
           .then((response) => response.json())
           .then((data) => {
             if (data) {
@@ -32,7 +39,7 @@ export default {
                   await dashboardInstance.value.getAccessibleDashboards();
                 console.log(dashboards);
                 dashboardId.value = dashboards[0]?.id;
-              }, 100);
+              }, 300);
             }
           });
       }
@@ -54,6 +61,7 @@ export default {
       authKey,
       authToken,
       dashboardInstance,
+      idTokenClaims,
     };
   },
 };

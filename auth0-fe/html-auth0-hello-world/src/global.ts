@@ -18,14 +18,15 @@ $(document).ready(() => {
 
 export { globalRoot };
 
-webAuth.parseHash({ hash: window.location.hash }, function(err: any, authResult: any) {
+webAuth.parseHash({ hash: window.location.hash }, async function(err: any, authResult: any) {
   if (err) {
     return console.log(err);
   }
   if (authResult) {
+    console.log(authResult);
     webAuth.client.userInfo(authResult.accessToken, function(err: any, user: any) {
       // Now you have the user's information
-      console.log(user);
+      user.idToken = authResult.idToken;
       renderPortal(globalRoot, null, user);
     });
   }

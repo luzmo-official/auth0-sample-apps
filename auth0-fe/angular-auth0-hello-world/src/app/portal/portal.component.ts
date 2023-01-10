@@ -22,31 +22,31 @@ export class PortalComponent implements OnInit {
 
   ngOnInit(): void {
     // We can use raw claims to send JWT token instead of cumulio object.
-    // this.auth.idTokenClaims$.subscribe((claims) => console.log(claims?.__raw));
-    this.auth.user$.subscribe(user => {
-      console.log(user);
-      if (user) {
-        // do an API call to authorize.
-        this.http.get<{
-          status: string;
-          key?: string;
-          token?: string;
-        }>(`http://localhost:4001?brand=${user['https://cumulio/brand']}&username=${user['nickname']}&email=${user.email}&name=${user.name}`)
-        .subscribe((data) => {
-          console.log(data);
-          this.key = data.key;
-          this.token = data.token;
-          console.log('Fetching accessible dashboards');
+    this.auth.idTokenClaims$.subscribe((claims) => {
+      const token = claims?.__raw;
+      this.http.get<{
+        status: string;
+        key?: string;
+        token?: string;
+      }>(`http://localhost:4001`, {
+        headers: {
+          'Authorization': 'Bearer ' + token 
+        }
+      })
+      .subscribe((data) => {
+        console.log(data);
+        this.key = data.key;
+        this.token = data.token;
+        console.log('Fetching accessible dashboards');
 
-          setTimeout(() => {
-            // dynamically fetch dashboards and load the first one
-            this.dashboardInstance?.getAccessibleDashboards().subscribe(dashboards => {
-              this.dashboardId = dashboards[0]?.id;
-            });
-          }, 100);
+        setTimeout(() => {
+          // dynamically fetch dashboards and load the first one
+          this.dashboardInstance?.getAccessibleDashboards().subscribe(dashboards => {
+            this.dashboardId = dashboards[0]?.id;
+          });
+        }, 100);
 
-        });
-      }
+      });
     });
   }
 

@@ -8,7 +8,7 @@ $(document).on("click", "#investor-relations", () => {
 
 $(document).on("click", "#brand-portal", () => {
   webAuth.authorize({
-    responseType: 'token',
+    responseType: 'token id_token',
     redirectUri: 'http://localhost:4200/'
   });
 });

@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@auth0/auth0-vue": "^1.0.2",
-    "@cumul.io/vue-cumulio-dashboard": "^2.0.10",
+    "@cumul.io/vue-cumulio-dashboard": "^2.0.15",
     "vue": "^3.2.38",
     "vue-router": "^4.1.5"
   },

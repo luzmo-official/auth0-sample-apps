@@ -30,11 +30,14 @@ metadata = {}
 
 @app.route("/")
 def hello_world():
-  properties["username"] = request.args.get("username") or os.getenv("USER_USERNAME")
-  properties["name"] = request.args.get("name") or os.getenv("USER_NAME")
-  properties["email"] = request.args.get("email") or os.getenv("USER_EMAIL")
-  properties["suborganization"] = request.args.get("username") or properties["suborganization"]
-  metadata["brand"] = request.args.get("brand")
+  authToken = request.headers.get("Authorization").split(" ")[1]
+  payload = jwt.decode(authToken, options={"verify_signature": False})
+
+  properties["username"] = payload.get("name") or os.getenv("USER_USERNAME")
+  properties["name"] = payload.get("name") or os.getenv("USER_NAME")
+  properties["email"] = payload.get("email") or os.getenv("USER_EMAIL")
+  properties["suborganization"] = payload.get("username") or properties["suborganization"]
+  metadata["brand"] = payload.get("https://cumulio/brand")
   properties["metadata"] = metadata
   # jwt.decode(request.args.get("token"))
   # Use the token to fill in information.

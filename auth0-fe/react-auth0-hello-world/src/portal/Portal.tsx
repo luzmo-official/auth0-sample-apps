@@ -11,29 +11,36 @@ function Portal() {
   const [dashboardId, setDashboardId] = useState('');
   const [key, setKey] = useState(null);
   const [token, setToken] = useState(null);
-  const { isAuthenticated, user, logout } = useAuth0();
+  const { isAuthenticated, user, logout, getIdTokenClaims } = useAuth0();
+  console.log(user);
   const ref = useRef<CumulioDashboard>(null);
 
   useEffect(() => {
-    if (user) {
-      window.fetch(`http://localhost:4001?brand=${user?.['https://cumulio/brand']}&username=${user?.['nickname']}&email=${user?.email}&name=${user?.name}`)
-      .then(response => response.json())
-      .then((data) => {
-        setTimeout(() => {
-          setKey(data.key);
-          setToken(data.token);
+    getIdTokenClaims().then(idTokenClaims => {
+      if (user) {
+        window.fetch(`http://localhost:4001`, {
+          headers: {
+            'Authorization': 'Bearer ' + idTokenClaims?.__raw
+          }
+        })
+        .then(response => response.json())
+        .then((data) => {
           setTimeout(() => {
-            ref.current?.getAccessibleDashboards().then(dashboards => {
-              console.log(dashboards);
-              if (dashboards) {
-                setDashboardId(dashboards[0].id);
-              }
-            });
-          }, 100);
-        }, 2000);
-
-      });
-    }
+            setKey(data.key);
+            setToken(data.token);
+            setTimeout(() => {
+              ref.current?.getAccessibleDashboards().then(dashboards => {
+                console.log(dashboards);
+                if (dashboards) {
+                  setDashboardId(dashboards[0].id);
+                }
+              });
+            }, 100);
+          }, 2000);
+  
+        });
+      }
+    });
   }, [user]);
 
 
