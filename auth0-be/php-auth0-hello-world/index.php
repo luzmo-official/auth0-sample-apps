@@ -3,6 +3,11 @@ require 'vendor/autoload.php';
 use Cumulio\Cumulio;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Auth0\SDK\Auth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Token;
+// use Auth0\SDK\Helpers\JWKFetcher;
+use Auth0\SDK\Token\Verifier;
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -17,26 +22,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
+$configuration = new SdkConfiguration(
+  strategy: SdkConfiguration::STRATEGY_API,
+  domain: 'https://'.$_ENV['AUTH_DOMAIN'].'/',
+  audience: array($_ENV['AUTH_AUDIENCE']),
+  clientId: $_ENV['AUTH_CLIENT_ID']
+);
+
+$auth0 = new Auth0($configuration);
+
 $client = Cumulio::initialize($_ENV['CUMUL_KEY'], $_ENV['CUMUL_TOKEN'], $_ENV['API_URL']);
 $queries = array();
 
 $headers = getallheaders();
 $token = $headers['Authorization'];
+
 $jwtToken = explode(' ', $token)[1];
 
-// $decodedToken = JWT::decode($token);
-[, $payload_b64] = explode('.', $jwtToken);
-$decodedToken = (array)JWT::jsonDecode(JWT::urlsafeB64Decode($payload_b64));
-// then use the decoded values as input
+
+$decodedToken = $auth0->decode($jwtToken)->toArray();
+$data = json_decode(file_get_contents('php://input'), true);
+
 $data = array(
   'integration_id' => $_ENV['INTEGRATION_ID'],
   'type' => 'sso',
   'expiry' => '24 hours',
   'inactivity_interval' => '10 minutes',
-  'username' => $decodedToken['name'] ?? $_ENV['USER_USERNAME'],
-  'name' => $decodedToken['name'] ?? $_ENV['USER_NAME'],
-  'email' => $decodedToken['email'] ?? $_ENV['USER_EMAIL'],
-  'suborganization' => $_ENV['USER_SUBORGANIZATION'],
+  'username' => $data['username'] ?? $_ENV['USER_USERNAME'],
+  'name' => $data['name'] ?? $_ENV['USER_NAME'],
+  'email' => $data['email'] ?? $_ENV['USER_EMAIL'],
+  'suborganization' => $data['suborganization'] ?? $_ENV['USER_SUBORGANIZATION'],
   'role' => 'viewer',
   'metadata' => array(
     'brand' => $decodedToken['https://cumulio/brand']

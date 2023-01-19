@@ -6,7 +6,8 @@ export const clientID = 'tR0pmh3WR5hGBCzaEZ9kHy2PqoG17jFz';
 
 export const webAuth = new auth0.WebAuth({
   domain:       'dev-mxdu54vq.us.auth0.com',
-  clientID:     clientID
+  clientID:     clientID,
+  audience:     'https://dev-mxdu54vq.us.auth0.com/api/v2/'
 });
 
 
@@ -26,7 +27,7 @@ webAuth.parseHash({ hash: window.location.hash }, async function(err: any, authR
     console.log(authResult);
     webAuth.client.userInfo(authResult.accessToken, function(err: any, user: any) {
       // Now you have the user's information
-      user.idToken = authResult.idToken;
+      user.accessToken = authResult.accessToken;
       renderPortal(globalRoot, null, user);
     });
   }

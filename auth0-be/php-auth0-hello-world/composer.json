@@ -2,6 +2,7 @@
     "require": {
         "vlucas/phpdotenv": "^5.4",
         "cumulio/cumul.io-sdk-php": "^1.0",
-        "firebase/php-jwt": "^6.3"
+        "firebase/php-jwt": "^6.3",
+        "auth0/auth0-php": "^8.3"
     }
 }

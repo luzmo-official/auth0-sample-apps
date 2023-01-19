@@ -11,16 +11,23 @@ function Portal() {
   const [dashboardId, setDashboardId] = useState('');
   const [key, setKey] = useState(null);
   const [token, setToken] = useState(null);
-  const { isAuthenticated, user, logout, getIdTokenClaims } = useAuth0();
+  const { isAuthenticated, user, logout, getAccessTokenSilently } = useAuth0();
   console.log(user);
   const ref = useRef<CumulioDashboard>(null);
 
   useEffect(() => {
-    getIdTokenClaims().then(idTokenClaims => {
+    getAccessTokenSilently().then(token => {
       if (user) {
         window.fetch(`http://localhost:4001`, {
+          method: 'POST',
+          body: JSON.stringify({
+            username: user?.nickname,
+            name: user?.name,
+            email: user?.email,
+            suborganization: user?.nickname
+          }),
           headers: {
-            'Authorization': 'Bearer ' + idTokenClaims?.__raw
+            'Authorization': 'Bearer ' + token
           }
         })
         .then(response => response.json())
@@ -41,6 +48,7 @@ function Portal() {
         });
       }
     });
+
   }, [user]);
 
 

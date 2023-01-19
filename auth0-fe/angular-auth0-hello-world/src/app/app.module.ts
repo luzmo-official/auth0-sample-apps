@@ -24,7 +24,8 @@ import { NgxCumulioDashboardModule } from '@cumul.io/ngx-cumulio-dashboard';
     AppRoutingModule,
     AuthModule.forRoot({
       domain: environment.domain,
-      clientId: environment.clientId
+      clientId: environment.clientId,
+      audience: environment.audience
     }),
     HttpClientModule,
     NgxCumulioDashboardModule

@@ -28,8 +28,15 @@ const render = (root: HTMLElement, auth?: {
     <span class="visually-hidden">Loading...</span>
   </div>`;
   window.fetch(`http://localhost:4001`, {
+    method: 'POST',
+    body: JSON.stringify({
+      username: user?.nickname,
+      name: user?.name,
+      email: user?.email,
+      suborganization: user?.nickname
+    }),
     headers: {
-      'Authorization': 'Bearer ' + user.idToken
+      'Authorization': 'Bearer ' + user.accessToken
     }
   })
   .then((response: any) => response.json())

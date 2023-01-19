@@ -7,18 +7,31 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import com.auth0.jwk.JwkException;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.JwkProviderBuilder;
+import com.auth0.jwt.interfaces.RSAKeyProvider;
 import fi.iki.elonen.NanoHTTPD;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.cumul.sdk.Cumulio;
 import org.json.JSONObject;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.common.collect.ImmutableMap;
+// import com.auth0;
+// import com.auth0.jw;
+import com.auth0.jwk.Jwk;
 
 public class App extends NanoHTTPD {
 
@@ -57,20 +70,28 @@ public class App extends NanoHTTPD {
                 return response;
             }
             System.out.println("HandlePOST");
+
             Map<String, String> headers = session.getHeaders();
-            Map<String, Claim> userObject = getUserOjbect(headers.get("authorization"));
+            JWTVerifier verifier = JWT.require(getAlgorithm()).build();
+            DecodedJWT jwtToken = verifier.verify(headers.get("authorization").split(" ")[1]);
+
+            final HashMap<String, String> map = new HashMap<>();
+            session.parseBody(map);
+            JSONObject postData = new JSONObject(map.get("postData"));
+
+
             // Setup connection
             Cumulio client = new Cumulio(dotenv.get("CUMUL_KEY"), dotenv.get("CUMUL_TOKEN"), dotenv.get("API_URL"));
-            ImmutableMap metadata = ImmutableMap.builder().put("brand", userObject.get("https://cumulio/brand").asString()).build();
+            ImmutableMap metadata = ImmutableMap.builder().put("brand", jwtToken.getClaim("https://cumulio/brand").asString()).build();
             // On page requests of pages containing embedded dashboards, request an "authorization"
             JSONObject authorization = client.create("authorization", ImmutableMap.builder()
                 .put("type", "sso")
                 .put("expiry", "24 hours")
                 .put("inactivity_interval", "10 minutes")
-                .put("username", userObject.get("name").asString() != null ? userObject.get("name").asString() : dotenv.get("USER_USERNAME"))
-                .put("name", userObject.get("name").asString() != null ? userObject.get("name").asString() : dotenv.get("USER_NAME"))
-                .put("email", userObject.get("email").asString() != null ? userObject.get("email").asString() : dotenv.get("USER_EMAIL"))
-                .put("suborganization", dotenv.get("USER_SUBORGANIZATION"))
+                .put("username", postData.get("username") != null ? postData.get("username") : dotenv.get("USER_USERNAME"))
+                .put("name", postData.get("name") != null ? postData.get("name") : dotenv.get("USER_NAME"))
+                .put("email", postData.get("email") != null ? postData.get("email") : dotenv.get("USER_EMAIL"))
+                .put("suborganization", postData.get("suborganization") != null ? postData.get("suborganization") : dotenv.get("USER_SUBORGANIZATION"))
                 .put("integration_id", dotenv.get("INTEGRATION_ID"))
                 .put("role", "viewer")
                 .put("metadata", metadata)
@@ -116,4 +137,35 @@ public class App extends NanoHTTPD {
         }
         return query_pairs;
     }
+
+     private static Algorithm getAlgorithm() {
+         JwkProvider provider = new JwkProviderBuilder("https://" + dotenv.get("AUTH_DOMAIN") + "/")
+         .cached(10, 24, TimeUnit.HOURS)
+         .rateLimited(10, 1, TimeUnit.MINUTES)
+         .build();
+
+         RSAKeyProvider keyProvider = new RSAKeyProvider() {
+             @Override
+             public RSAPublicKey getPublicKeyById(String kid) {
+                 try {
+                     return (RSAPublicKey) provider.get(kid).getPublicKey();
+                 } catch (JwkException e) {
+                     throw new RuntimeException(e);
+                 }
+             }
+
+             @Override
+             public RSAPrivateKey getPrivateKey() {
+                 return null;
+             }
+
+             @Override
+             public String getPrivateKeyId() {
+                 return null;
+             }
+         };
+
+         Algorithm algorithm = Algorithm.RSA256(keyProvider);
+         return algorithm;
+     }
 }

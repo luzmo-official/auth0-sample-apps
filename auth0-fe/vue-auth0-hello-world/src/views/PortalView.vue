@@ -5,12 +5,12 @@ import { ref, watch } from "vue";
 export default {
   setup() {
     const {
-      idTokenClaims,
       loginWithRedirect,
       logout,
       isAuthenticated,
       isLoading,
       user,
+      getAccessTokenSilently
     } = useAuth0();
     const authKey = ref("");
     const authToken = ref("");
@@ -21,12 +21,20 @@ export default {
       router.push("/portal");
     }
 
-    watch(idTokenClaims, async () => {
-      if (idTokenClaims.value) {
+    watch(user, async () => {
+      if (user.value) {
+        const accessToken = await getAccessTokenSilently();
         window
           .fetch(`http://localhost:4001`, {
+            method: 'POST',
+            body: JSON.stringify({
+              username: user?.nickname,
+              name: user?.name,
+              email: user?.email,
+              suborganization: user?.nickname
+            }),
             headers: {
-              Authorization: "Bearer " + idTokenClaims.value.__raw,
+              Authorization: "Bearer " + accessToken,
             },
           })
           .then((response) => response.json())
@@ -61,7 +69,6 @@ export default {
       authKey,
       authToken,
       dashboardInstance,
-      idTokenClaims,
     };
   },
 };

@@ -7,4 +7,4 @@ npm start
 
 ## Configuring auth0
 * Open `src/global.ts`
-* Replace `domain` and `clientID` with your auth0 domain and clientId.
+* Replace `domain` and `clientId` and `audience` with your auth0 domain and clientId, audience.

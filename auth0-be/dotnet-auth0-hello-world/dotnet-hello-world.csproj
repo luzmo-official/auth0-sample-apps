@@ -11,6 +11,7 @@
     <PackageReference Include="CumulioSDK" Version="1.0.2" />
     <PackageReference Include="dotenv.net" Version="3.1.1" />
     <PackageReference Include="JWT" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.13" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 

@@ -28,6 +28,8 @@ dependencies {
     implementation 'com.nanohttpd:nanohttpd:2.2.0'
     implementation 'io.github.cdimascio:dotenv-java:2.2.4'
     implementation 'com.auth0:java-jwt:4.0.0'
+    implementation 'com.auth0:jwks-rsa:0.21.2'
+
 }
 
 application {

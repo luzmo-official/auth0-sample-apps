@@ -4,8 +4,22 @@ const express = require('express');
 const jwtDecode = require('jwt-decode');
 const Cumulio = require('cumulio');
 const CORS = require('cors');
+const { expressjwt } = require('express-jwt');
+const jwks = require('jwks-rsa');
 
 dotenv.config()
+
+var checkJwt = expressjwt({
+    secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: `https://${process.env.AUTH_DOMAIN}/.well-known/jwks.json`
+  }),
+  audience: process.env.AUTH_AUDIENCE,
+  issuer: `https://${process.env.AUTH_DOMAIN}/`,
+  algorithms: ['RS256']
+});
 
 const data = {
   "integration_id": process.env.INTEGRATION_ID,
@@ -27,20 +41,24 @@ const cumulClient = new Cumulio({
 
 
 const app = express();
+app.use(express.json());
+// app.use(express.urlencoded());
 app.use(CORS());
 const port = 4001;
 
-app.get('/', (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
-  const decodedToken = jwtDecode(token);
-  const brand = decodedToken['https://cumulio/brand']
+app.post('/', checkJwt, (req, res) => {
+  // const token = req.headers.authorization.split(' ')[1];
+  // const decodedToken = jwtDecode(token);
+  // const brand = decodedToken['https://cumulio/brand']
+  console.log(req.auth, req.body);
+  const decodedToken = req.auth;
   data.metadata = {
-    brand: brand
+    brand: decodedToken['https://cumulio/brand']
   };
-  data.username = decodedToken['username'] || data.username;
-  data.name = decodedToken['name'] || data.name;
-  data.email = decodedToken['email'] || data.email;
-  data.suborganization = decodedToken['suborganization'] || data.suborganization;
+  data.username = req.body['username'] || data.username;
+  data.name = req.body['name'] || data.name;
+  data.email = req.body['email'] || data.email;
+  data.suborganization = req.body['suborganization'] || data.suborganization;
   cumulClient.create('authorization', data).then(function (response) {
     const resp = {
       status: 'success',
