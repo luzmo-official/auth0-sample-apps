@@ -8,12 +8,12 @@ const appServer = 'APP_SERVER_HERE';
 const apiHost = 'API_HOST_HERE';
 
 function Portal() {
-  const [dashboardId, setDashboardId] = useState('');
-  const [key, setKey] = useState(null);
-  const [token, setToken] = useState(null);
+  const [dashboardId, setDashboardId] = useState<string | undefined>('');
+  const [key, setKey] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const { isAuthenticated, user, logout, getAccessTokenSilently } = useAuth0();
   console.log(user);
-  const ref = useRef<CumulioDashboard>(null);
+  const ref = useRef<CumulioDashboard | null>(null);
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
