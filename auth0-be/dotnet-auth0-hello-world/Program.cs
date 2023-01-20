@@ -53,7 +53,8 @@ app.MapPost("/", async (User user, HttpRequest httpRequest) => {
   properties.suborganization = user.suborganization ?? envVars["USER_SUBORGANIZATION"];
   properties.role = "viewer";
   properties.metadata = new ExpandoObject();
-  properties.metadata.brand = httpRequest.HttpContext.User.FindFirst("https://cumulio/brand").Value;
+  string[] brand = { httpRequest.HttpContext.User.FindFirst("https://cumulio/brand").Value };
+  properties.metadata.brand = brand;
 
   dynamic authorization = client.create("authorization", properties);
   dynamic authResp = new ExpandoObject();

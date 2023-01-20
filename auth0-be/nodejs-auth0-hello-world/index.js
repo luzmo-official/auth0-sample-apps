@@ -53,7 +53,7 @@ app.post('/', checkJwt, (req, res) => {
   console.log(req.auth, req.body);
   const decodedToken = req.auth;
   data.metadata = {
-    brand: decodedToken['https://cumulio/brand']
+    brand: [decodedToken['https://cumulio/brand']]
   };
   data.username = req.body['username'] || data.username;
   data.name = req.body['name'] || data.name;

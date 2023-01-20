@@ -27,7 +27,8 @@ function Portal() {
             suborganization: user?.nickname
           }),
           headers: {
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
           }
         })
         .then(response => response.json())

@@ -54,7 +54,7 @@ $data = array(
   'suborganization' => $data['suborganization'] ?? $_ENV['USER_SUBORGANIZATION'],
   'role' => 'viewer',
   'metadata' => array(
-    'brand' => $decodedToken['https://cumulio/brand']
+    'brand' => array($decodedToken['https://cumulio/brand'])
   )
 );
 

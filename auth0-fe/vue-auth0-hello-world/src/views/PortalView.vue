@@ -35,6 +35,7 @@ export default {
             }),
             headers: {
               Authorization: "Bearer " + accessToken,
+              "Content-Type": "application/json",
             },
           })
           .then((response) => response.json())

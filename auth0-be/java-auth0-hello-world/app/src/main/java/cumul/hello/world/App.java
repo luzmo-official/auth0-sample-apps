@@ -21,6 +21,8 @@ import com.auth0.jwt.interfaces.RSAKeyProvider;
 import fi.iki.elonen.NanoHTTPD;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.cumul.sdk.Cumulio;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.auth0.jwt.JWT;
@@ -82,7 +84,7 @@ public class App extends NanoHTTPD {
 
             // Setup connection
             Cumulio client = new Cumulio(dotenv.get("CUMUL_KEY"), dotenv.get("CUMUL_TOKEN"), dotenv.get("API_URL"));
-            ImmutableMap metadata = ImmutableMap.builder().put("brand", jwtToken.getClaim("https://cumulio/brand").asString()).build();
+            ImmutableMap metadata = ImmutableMap.builder().put("brand", new JSONArray().put(jwtToken.getClaim("https://cumulio/brand").asString())).build();
             // On page requests of pages containing embedded dashboards, request an "authorization"
             JSONObject authorization = client.create("authorization", ImmutableMap.builder()
                 .put("type", "sso")

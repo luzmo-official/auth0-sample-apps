@@ -36,7 +36,8 @@ const render = (root: HTMLElement, auth?: {
       suborganization: user?.nickname
     }),
     headers: {
-      'Authorization': 'Bearer ' + user.accessToken
+      'Authorization': 'Bearer ' + user.accessToken,
+      'Content-Type': 'application/json'
     }
   })
   .then((response: any) => response.json())

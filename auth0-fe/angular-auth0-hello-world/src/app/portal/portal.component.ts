@@ -42,7 +42,8 @@ export class PortalComponent implements OnInit {
           suborganization: user?.nickname
         }, {
           headers: {
-            'Authorization': 'Bearer ' + token 
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
           }
         })
         .subscribe((data) => {
