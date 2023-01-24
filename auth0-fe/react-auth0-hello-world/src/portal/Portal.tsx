@@ -55,10 +55,10 @@ function Portal() {
 
   return isAuthenticated && user ? <div className="position-relative">
     <nav className="navbar navbar-dark" style={{
-      'backgroundColor': user['https://cumulio/brand'] === 'Mars Boots' ? '#f06292' : '#d32f2f'
+      'backgroundColor': user['https://cumulio/brand'][0] === 'Mars Boots' ? '#f06292' : '#d32f2f'
     }}>
       <div className="container">
-        <Link className="navbar-brand" to="#">{ user['https://cumulio/brand'] === 'Mars Boots'  ? 'MARS BOOTS' : 'EARTHLY SHOES'}</Link>
+        <Link className="navbar-brand" to="#">{ user['https://cumulio/brand'][0] === 'Mars Boots'  ? 'MARS BOOTS' : 'EARTHLY SHOES'}</Link>
         <span className="d-flex navbar-email position-relative">
           <strong>{user?.email}</strong>
           <div className="position-absolute btn btn-dark btn-logout" onClick={() => logout({ returnTo: window.location.origin })}>Logout</div>

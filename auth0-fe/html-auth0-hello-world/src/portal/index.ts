@@ -52,9 +52,9 @@ const render = (root: HTMLElement, auth?: {
     root.innerHTML = `
     <div class="position-relative">
       <nav class="navbar navbar-dark" id="portal-navbar" style="
-        background-color: ${user?.['https://cumulio/brand'] === 'Mars Boots' ? '#f06292' : '#d32f2f'}">
+        background-color: ${user?.['https://cumulio/brand'][0] === 'Mars Boots' ? '#f06292' : '#d32f2f'}">
         <div class="container">
-          <a class="navbar-brand" href="#">${user?.['https://cumulio/brand'] === 'Mars Boots'  ? 'MARS BOOTS' : 'EARTHLY SHOES'}</a>
+          <a class="navbar-brand" href="#">${user?.['https://cumulio/brand'][0] === 'Mars Boots'  ? 'MARS BOOTS' : 'EARTHLY SHOES'}</a>
           <span class="d-flex navbar-email position-relative">
             <strong>${user.email}</strong>
             <div class="position-absolute btn btn-dark btn-logout" id="logout">Logout</div>

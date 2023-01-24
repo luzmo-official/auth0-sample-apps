@@ -81,14 +81,14 @@ export default {
         class="navbar navbar-dark"
         :style="{
           'background-color':
-            user?.['https://cumulio/brand'] === 'Mars Boots'
+            user?.['https://cumulio/brand'][0] === 'Mars Boots'
               ? '#f06292'
               : '#d32f2f',
         }"
       >
         <div class="container">
           <a class="navbar-brand" href="#">{{
-            user?.["https://cumulio/brand"] === "Mars Boots"
+            user?.["https://cumulio/brand"][0] === "Mars Boots"
               ? "MARS BOOTS"
               : "EARTHLY SHOES"
           }}</a>

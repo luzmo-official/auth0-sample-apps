@@ -6,13 +6,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Auth0Provider } from "@auth0/auth0-react";
+import config from './config';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Auth0Provider domain='dev-mxdu54vq.us.auth0.com' clientId='tR0pmh3WR5hGBCzaEZ9kHy2PqoG17jFz' audience='https://dev-mxdu54vq.us.auth0.com/api/v2/' redirectUri={window.location.origin}>
+    <Auth0Provider domain={config.domain} clientId={config.clientId} audience={config.audience} redirectUri={window.location.origin}>
       <BrowserRouter>
         <App />
       </BrowserRouter>

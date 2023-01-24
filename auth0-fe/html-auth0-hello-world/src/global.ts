@@ -1,13 +1,13 @@
 import auth0 from 'auth0-js';
 import renderPortal from './portal';
-
-export const clientID = 'tR0pmh3WR5hGBCzaEZ9kHy2PqoG17jFz';
+import config from './config';
+export const clientID = config.clientId;
 
 
 export const webAuth = new auth0.WebAuth({
-  domain:       'dev-mxdu54vq.us.auth0.com',
+  domain:       config.domain,
   clientID:     clientID,
-  audience:     'https://dev-mxdu54vq.us.auth0.com/api/v2/'
+  audience:     config.audience
 });
 
 

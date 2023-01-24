@@ -131,7 +131,7 @@ def hello_world():
   properties["name"] = request.json['name'] or os.getenv("USER_NAME")
   properties["email"] = request.json['email'] or os.getenv("USER_EMAIL")
   properties["suborganization"] = request.json['suborganization'] or properties["suborganization"]
-  metadata["brand"] = [request.current_user["https://cumulio/brand"]]
+  metadata["brand"] = request.current_user["https://cumulio/brand"]
   properties["metadata"] = metadata
   # jwt.decode(request.args.get("token"))
   # Use the token to fill in information.

@@ -84,7 +84,8 @@ public class App extends NanoHTTPD {
 
             // Setup connection
             Cumulio client = new Cumulio(dotenv.get("CUMUL_KEY"), dotenv.get("CUMUL_TOKEN"), dotenv.get("API_URL"));
-            ImmutableMap metadata = ImmutableMap.builder().put("brand", new JSONArray().put(jwtToken.getClaim("https://cumulio/brand").asString())).build();
+
+            ImmutableMap metadata = ImmutableMap.builder().put("brand", new JSONArray(jwtToken.getClaim("https://cumulio/brand").asArray(String.class))).build();
             // On page requests of pages containing embedded dashboards, request an "authorization"
             JSONObject authorization = client.create("authorization", ImmutableMap.builder()
                 .put("type", "sso")

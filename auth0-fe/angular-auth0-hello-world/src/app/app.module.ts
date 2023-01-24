@@ -11,6 +11,7 @@ import { InvestorComponent } from './investor/investor.component';
 import { environment } from 'src/environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxCumulioDashboardModule } from '@cumul.io/ngx-cumulio-dashboard';
+import config from '../config';
 
 @NgModule({
   declarations: [	
@@ -23,9 +24,9 @@ import { NgxCumulioDashboardModule } from '@cumul.io/ngx-cumulio-dashboard';
     BrowserModule,
     AppRoutingModule,
     AuthModule.forRoot({
-      domain: environment.domain,
-      clientId: environment.clientId,
-      audience: environment.audience
+      domain: config.domain,
+      clientId: config.clientId,
+      audience: config.audience
     }),
     HttpClientModule,
     NgxCumulioDashboardModule
