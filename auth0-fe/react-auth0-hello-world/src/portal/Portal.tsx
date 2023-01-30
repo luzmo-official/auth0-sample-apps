@@ -21,10 +21,8 @@ function Portal() {
         window.fetch(`http://localhost:4001`, {
           method: 'POST',
           body: JSON.stringify({
-            username: user?.nickname,
             name: user?.name,
             email: user?.email,
-            suborganization: user?.nickname
           }),
           headers: {
             'Authorization': 'Bearer ' + token,

@@ -55,10 +55,10 @@ app.post('/', checkJwt, (req, res) => {
   data.metadata = {
     brand: decodedToken['https://cumulio/brand']
   };
-  data.username = req.body['username'] || data.username;
+  data.username = decodedToken['sub'] || data.username;
   data.name = req.body['name'] || data.name;
   data.email = req.body['email'] || data.email;
-  data.suborganization = req.body['suborganization'] || data.suborganization;
+  data.suborganization = decodedToken['https://cumulio/suborganization'] || data.suborganization;
   cumulClient.create('authorization', data).then(function (response) {
     const resp = {
       status: 'success',
