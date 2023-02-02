@@ -47,7 +47,8 @@ app.MapPost("/", async (User user, HttpRequest httpRequest) => {
   properties.type = "sso";
   properties.expiry = "24 hours";
   properties.inactivity_interval = "1 year";
-  properties.username = httpRequest.HttpContext.User.FindFirst("sub").Value ?? envVars["USER_USERNAME"];
+  // Sub claim is mapped by middleware to http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
+  properties.username = httpRequest.HttpContext.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value ?? envVars["USER_USERNAME"];
   properties.name = user.name ?? envVars["USER_NAME"];
   properties.email = user.email ?? envVars["USER_EMAIL"];
   properties.suborganization = httpRequest.HttpContext.User.FindFirst("https://cumulio/suborganization").Value ?? envVars["USER_SUBORGANIZATION"];

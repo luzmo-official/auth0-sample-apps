@@ -81,7 +81,6 @@ public class App extends NanoHTTPD {
             session.parseBody(map);
             JSONObject postData = new JSONObject(map.get("postData"));
 
-
             // Setup connection
             Cumulio client = new Cumulio(dotenv.get("CUMUL_KEY"), dotenv.get("CUMUL_TOKEN"), dotenv.get("API_URL"));
 
@@ -94,7 +93,7 @@ public class App extends NanoHTTPD {
                 .put("username", jwtToken.getClaim("sub").asString() != null ? jwtToken.getClaim("sub").asString() : dotenv.get("USER_USERNAME"))
                 .put("name", postData.get("name") != null ? postData.get("name") : dotenv.get("USER_NAME"))
                 .put("email", postData.get("email") != null ? postData.get("email") : dotenv.get("USER_EMAIL"))
-                .put("suborganization", jwtToken.getClaim("https://cumulio/brand").asString() != null ? jwtToken.getClaim("https://cumulio/brand").asString() : dotenv.get("USER_SUBORGANIZATION"))
+                .put("suborganization", jwtToken.getClaim("https://cumulio/suborganization").asString() != null ? jwtToken.getClaim("https://cumulio/suborganization").asString() : dotenv.get("USER_SUBORGANIZATION"))
                 .put("integration_id", dotenv.get("INTEGRATION_ID"))
                 .put("role", "viewer")
                 .put("metadata", metadata)
@@ -111,7 +110,6 @@ public class App extends NanoHTTPD {
             response.addHeader("Access-Control-Allow-Origin", "*");
             response.addHeader("Access-Control-Allow-Headers", "*");
             response.addHeader("Content-Type", "application/json");
-            response.addHeader("Access-Control-Allow-Origin", "*");
             return response;
         } catch(Exception e) {
             System.out.println(e);

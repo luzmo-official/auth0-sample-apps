@@ -28,8 +28,8 @@ export default {
           .fetch(`http://localhost:4001`, {
             method: 'POST',
             body: JSON.stringify({
-              name: user?.name,
-              email: user?.email,
+              name: user.value.name,
+              email: user.value.email,
             }),
             headers: {
               Authorization: "Bearer " + accessToken,
@@ -79,14 +79,14 @@ export default {
         class="navbar navbar-dark"
         :style="{
           'background-color':
-            user?.['https://cumulio/brand'][0] === 'Mars Boots'
+            user?.['https://cumulio/brand']?.[0] === 'Mars Boots'
               ? '#f06292'
               : '#d32f2f',
         }"
       >
         <div class="container">
           <a class="navbar-brand" href="#">{{
-            user?.["https://cumulio/brand"][0] === "Mars Boots"
+            user?.["https://cumulio/brand"]?.[0] === "Mars Boots"
               ? "MARS BOOTS"
               : "EARTHLY SHOES"
           }}</a>

@@ -1,6 +1,6 @@
 import './home.css';
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 
