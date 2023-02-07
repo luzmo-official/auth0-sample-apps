@@ -1,7 +1,6 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
 const express = require('express');
-const jwtDecode = require('jwt-decode');
 const Cumulio = require('cumulio');
 const CORS = require('cors');
 const { expressjwt } = require('express-jwt');
@@ -42,14 +41,10 @@ const cumulClient = new Cumulio({
 
 const app = express();
 app.use(express.json());
-// app.use(express.urlencoded());
 app.use(CORS());
 const port = 4001;
 
 app.post('/', checkJwt, (req, res) => {
-  // const token = req.headers.authorization.split(' ')[1];
-  // const decodedToken = jwtDecode(token);
-  // const brand = decodedToken['https://cumulio/brand']
   console.log(req.auth, req.body);
   const decodedToken = req.auth;
   data.metadata = {
@@ -75,30 +70,6 @@ app.post('/', checkJwt, (req, res) => {
     res.json(resp);
   });
 
-  // let config = {
-  //   method: 'post',
-  //   url: `${process.env.API_URL || 'https://api.cumul.io'}/0.1.0/authorization`,
-  //   headers: { 
-  //     'Content-Type': 'application/json'
-  //   },
-  //   data : JSON.stringify(data)
-  // };
-  // axios(config)
-  // .then(function (response) {
-  //   const resp = {
-  //     status: 'success',
-  //     key: response.data.id,
-  //     token: response.data.token
-  //   };
-  //   res.json(resp);
-  // })
-  // .catch(function (error) {
-  //   const resp = {
-  //     status: 'failed',
-  //     error
-  //   };
-  //   res.json(resp);
-  // });
 });
 
 app.listen(port, () => {

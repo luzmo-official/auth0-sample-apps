@@ -2,8 +2,6 @@ using CumulioAPI;
 using System.Dynamic;
 using dotenv.net;
 using Newtonsoft.Json;
-using JWT.Builder;
-using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 DotEnv.Load();
@@ -29,14 +27,6 @@ app.UseAuthentication();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-}
-
-dynamic decodeToken(String authorizationString) {
-  String authorizationToken = authorizationString.Split(" ")[1];
-  dynamic decodedToken = JwtBuilder.Create()
-    .DoNotVerifySignature()
-    .Decode(authorizationToken);
-  return JObject.Parse(decodedToken);
 }
 
 app.MapPost("/", async (User user, HttpRequest httpRequest) => {

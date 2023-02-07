@@ -122,23 +122,6 @@ public class App extends NanoHTTPD {
 
     }
 
-    private static Map<String, Claim> getUserOjbect(String authorizationToken) {
-        String authToken = authorizationToken.split(" ")[1];
-        DecodedJWT authUser = JWT.decode(authToken);
-        System.out.println("AuthUser" + authUser.getClaims().get("nickname"));
-        return authUser.getClaims();
-    } 
-
-    private static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
-        Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-        String[] pairs = query.split("&");
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
-        }
-        return query_pairs;
-    }
-
      private static Algorithm getAlgorithm() {
          JwkProvider provider = new JwkProviderBuilder("https://" + dotenv.get("AUTH_DOMAIN") + "/")
          .cached(10, 24, TimeUnit.HOURS)

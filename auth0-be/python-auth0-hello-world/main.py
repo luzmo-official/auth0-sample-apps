@@ -133,8 +133,6 @@ def hello_world():
   properties["suborganization"] = request.current_user["https://cumulio/suborganization"] or properties["suborganization"]
   metadata["brand"] = request.current_user["https://cumulio/brand"]
   properties["metadata"] = metadata
-  # jwt.decode(request.args.get("token"))
-  # Use the token to fill in information.
   authorization = client.create("authorization", properties)
   authResponse = {}
   authResponse["status"] = "success"
