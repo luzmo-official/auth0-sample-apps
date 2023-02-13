@@ -31,19 +31,16 @@ function Portal() {
         })
         .then(response => response.json())
         .then((data) => {
+          setKey(data.key);
+          setToken(data.token);
           setTimeout(() => {
-            setKey(data.key);
-            setToken(data.token);
-            setTimeout(() => {
-              ref.current?.getAccessibleDashboards().then(dashboards => {
-                console.log(dashboards);
-                if (dashboards) {
-                  setDashboardId(dashboards[0].id);
-                }
-              });
-            }, 100);
-          }, 2000);
-  
+            ref.current?.getAccessibleDashboards().then(dashboards => {
+              console.log(dashboards);
+              if (dashboards) {
+                setDashboardId(dashboards[0].id);
+              }
+            });
+          }, 100);
         });
       }
     });
@@ -65,7 +62,7 @@ function Portal() {
 
     </nav>
     <div className="container mt-4 position-relative dashboard-loader">
-    { key && token ? <CumulioDashboardComponent
+    <CumulioDashboardComponent
       ref={ref}
       dashboardId={dashboardId}
       authKey={key}
@@ -81,7 +78,7 @@ function Portal() {
       load={(e) => console.log("load", e)}
     ></CumulioDashboardComponent> : <div className="spinner-border text-danger loader" role="status">
     <span className="visually-hidden">Loading...</span>
-  </div> }
+  </div>
     </div>
     </div> : <div className="spinner-border text-danger loader" role="status">
     <span className="visually-hidden">Loading...</span>
