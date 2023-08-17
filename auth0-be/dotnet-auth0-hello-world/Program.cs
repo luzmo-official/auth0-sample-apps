@@ -36,7 +36,7 @@ app.MapPost("/", async (User user, HttpRequest httpRequest) => {
   properties.integration_id = envVars["INTEGRATION_ID"];
   properties.type = "sso";
   properties.expiry = "24 hours";
-  properties.inactivity_interval = "1 year";
+  properties.inactivity_interval = "10 minutes";
   // Sub claim is mapped by middleware to http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
   properties.username = httpRequest.HttpContext.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value ?? envVars["USER_USERNAME"];
   properties.name = user.name ?? envVars["USER_NAME"];
