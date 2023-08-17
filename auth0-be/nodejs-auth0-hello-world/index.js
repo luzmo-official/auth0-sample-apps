@@ -24,7 +24,7 @@ const data = {
   "integration_id": process.env.INTEGRATION_ID,
   "type": "sso",
   "expiry": "24 hours",
-  "inactivity_interval": "1 year",
+  "inactivity_interval": "10 minutes",
   "username": process.env.USER_USERNAME,
   "name": process.env.USER_NAME,
   "email": process.env.USER_EMAIL,
